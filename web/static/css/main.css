@@ -213,6 +213,158 @@ body {
     }
 }
 
+/* 账户余额卡片 */
+.account-card {
+    position: relative;
+}
+
+.account-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.account-title {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.1rem;
+    color: #888;
+    font-weight: 600;
+}
+
+.currency-selector {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid #333;
+    border-radius: 6px;
+    color: #fff;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.currency-selector:hover {
+    border-color: #00d4ff;
+    background: rgba(0, 212, 255, 0.1);
+}
+
+.currency-selector:focus {
+    outline: none;
+    border-color: #00d4ff;
+    box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.2);
+}
+
+.account-balance {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.currency-symbol {
+    font-size: 2rem;
+    color: #00d4ff;
+    font-weight: 700;
+}
+
+.total-assets {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #00d4ff;
+    font-family: 'SF Mono', Monaco, monospace;
+}
+
+.profit-section {
+    border-top: 1px solid #333;
+    padding-top: 1rem;
+}
+
+.profit-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+}
+
+.profit-period {
+    font-size: 0.9rem;
+    color: #888;
+    font-weight: 500;
+}
+
+.period-selector {
+    display: flex;
+    gap: 0.3rem;
+}
+
+.period-btn {
+    background: transparent;
+    border: 1px solid #333;
+    color: #888;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.period-btn:hover {
+    border-color: #00d4ff;
+    color: #00d4ff;
+}
+
+.period-btn.active {
+    background: #00d4ff;
+    border-color: #00d4ff;
+    color: #0a0a0a;
+    font-weight: 600;
+}
+
+.profit-display {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.profit-amount {
+    font-size: 1.2rem;
+    font-weight: 600;
+    font-family: 'SF Mono', Monaco, monospace;
+}
+
+.profit-amount.positive {
+    color: #00ff88;
+}
+
+.profit-amount.negative {
+    color: #ff4757;
+}
+
+.profit-percent {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.profit-percent.positive {
+    color: #00ff88;
+}
+
+.profit-percent.negative {
+    color: #ff4757;
+}
+
+.account-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(10, 10, 10, 0.9);
+    padding: 1rem;
+    border-radius: 8px;
+}
+
 /* 加载动画 */
 .loading {
     display: inline-block;

@@ -74,16 +74,22 @@ func (manager *WebSocketManager) Run() {
 			log.Printf("WebSocket客户端断开，当前连接数: %d", len(manager.clients))
 
 		case message := <-manager.broadcast:
-			manager.mutex.RLock()
+			manager.mutex.Lock()
 			for client := range manager.clients {
-				err := client.WriteMessage(websocket.TextMessage, message)
-				if err != nil {
-					log.Printf("发送消息失败: %v", err)
-					delete(manager.clients, client)
-					client.Close()
-				}
+				go func(c *websocket.Conn, msg []byte) {
+					err := c.WriteMessage(websocket.TextMessage, msg)
+					if err != nil {
+						log.Printf("发送消息失败: %v", err)
+						manager.mutex.Lock()
+						if _, exists := manager.clients[c]; exists {
+							delete(manager.clients, c)
+							c.Close()
+						}
+						manager.mutex.Unlock()
+					}
+				}(client, message)
 			}
-			manager.mutex.RUnlock()
+			manager.mutex.Unlock()
 		}
 	}
 }

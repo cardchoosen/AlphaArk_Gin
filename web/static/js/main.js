@@ -16,6 +16,7 @@ class AlphaArkApp {
             // 初始化服务
             this.apiService = new PriceApiService();
             this.priceCard = new PriceCard('BTC-USDT');
+            this.accountCard = new AccountCard();
             
             // 初始化WebSocket
             const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -76,6 +77,12 @@ class AlphaArkApp {
                     this.wsService.connect();
                 }
             }
+        });
+
+        // 全局币种变化事件监听
+        window.addEventListener('currencyChanged', (event) => {
+            console.log('全局币种已变更:', event.detail);
+            // 这里可以通知其他组件更新显示单位
         });
     }
 

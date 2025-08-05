@@ -36,6 +36,9 @@ func SetupRoutes(r *gin.Engine, cfg *config.Config) {
 	
 	// 设置WebSocket路由
 	SetupWebSocketRoutes(r, cfg)
+	
+	// 设置账户API路由
+	SetupAccountRoutes(r, cfg)
 }
 
 // GetUsers 获取用户列表
