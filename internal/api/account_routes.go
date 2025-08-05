@@ -62,6 +62,21 @@ func SetupAccountRoutes(r *gin.Engine, cfg *config.Config) {
 		account.GET("/exchange-rates", func(c *gin.Context) {
 			GetExchangeRates(c, accountService)
 		})
+
+		// 获取当前持仓信息
+		account.GET("/positions", func(c *gin.Context) {
+			GetPositions(c, accountService)
+		})
+
+		// 获取历史持仓信息
+		account.GET("/positions-history", func(c *gin.Context) {
+			GetPositionsHistory(c, accountService)
+		})
+
+		// 获取持仓完整历史（基于当前持仓的更新时间）
+		account.GET("/positions/:posId/history", func(c *gin.Context) {
+			GetPositionHistoryByPosId(c, accountService)
+		})
 	}
 }
 
@@ -257,6 +272,148 @@ func parsePeriods(periodsStr string) []models.TimePeriod {
 	}
 
 	return periods
+}
+
+// GetPositions 获取当前持仓信息
+func GetPositions(c *gin.Context, accountService service.AccountService) {
+	// 获取查询参数
+	var req models.PositionsRequest
+	if err := c.ShouldBindQuery(&req); err != nil {
+		utils.BadRequestResponse(c, "请求参数错误: "+err.Error())
+		return
+	}
+
+	// 获取币种参数
+	currencyStr := strings.ToUpper(c.DefaultQuery("currency", string(accountService.GetDefaultCurrency())))
+	currency := models.Currency(currencyStr)
+
+	if !isValidCurrency(currency) {
+		utils.BadRequestResponse(c, "不支持的币种: "+currencyStr)
+		return
+	}
+
+	// 获取当前持仓信息
+	response, err := accountService.GetPositions(&req, currency)
+	if err != nil {
+		utils.ErrorResponse(c, http.StatusInternalServerError, "获取当前持仓信息失败: "+err.Error())
+		return
+	}
+
+	utils.SuccessResponse(c, response, "获取当前持仓信息成功")
+}
+
+// GetPositionsHistory 获取历史持仓信息
+func GetPositionsHistory(c *gin.Context, accountService service.AccountService) {
+	// 获取查询参数
+	var req models.PositionsHistoryRequest
+	if err := c.ShouldBindQuery(&req); err != nil {
+		utils.BadRequestResponse(c, "请求参数错误: "+err.Error())
+		return
+	}
+
+	// 获取币种参数
+	currencyStr := strings.ToUpper(c.DefaultQuery("currency", string(accountService.GetDefaultCurrency())))
+	currency := models.Currency(currencyStr)
+
+	if !isValidCurrency(currency) {
+		utils.BadRequestResponse(c, "不支持的币种: "+currencyStr)
+		return
+	}
+
+	// 如果设置了fromCurrentPositions参数，自动获取当前持仓的时间戳作为参考
+	if c.Query("fromCurrentPositions") == "true" {
+		// 获取当前持仓信息
+		currentPosReq := &models.PositionsRequest{
+			InstType: req.InstType,
+			InstId:   req.InstId,
+		}
+		
+		currentPositions, err := accountService.GetPositions(currentPosReq, currency)
+		if err == nil && len(currentPositions.Positions) > 0 {
+			// 使用最新的持仓更新时间作为before参数
+			if req.Before == "" {
+				req.Before = currentPositions.Positions[0].UTime
+			}
+		}
+	}
+
+	// 获取历史持仓信息
+	response, err := accountService.GetPositionsHistory(&req, currency)
+	if err != nil {
+		utils.ErrorResponse(c, http.StatusInternalServerError, "获取历史持仓信息失败: "+err.Error())
+		return
+	}
+
+	utils.SuccessResponse(c, response, "获取历史持仓信息成功")
+}
+
+// GetPositionHistoryByPosId 根据持仓ID获取完整历史
+func GetPositionHistoryByPosId(c *gin.Context, accountService service.AccountService) {
+	posId := c.Param("posId")
+	if posId == "" {
+		utils.BadRequestResponse(c, "持仓ID不能为空")
+		return
+	}
+
+	// 获取币种参数
+	currencyStr := strings.ToUpper(c.DefaultQuery("currency", string(accountService.GetDefaultCurrency())))
+	currency := models.Currency(currencyStr)
+
+	if !isValidCurrency(currency) {
+		utils.BadRequestResponse(c, "不支持的币种: "+currencyStr)
+		return
+	}
+
+	// 首先获取当前持仓信息以获取uTime
+	currentPosReq := &models.PositionsRequest{
+		PosId: posId,
+	}
+	
+	currentPositions, err := accountService.GetPositions(currentPosReq, currency)
+	if err != nil {
+		utils.ErrorResponse(c, http.StatusInternalServerError, "获取当前持仓信息失败: "+err.Error())
+		return
+	}
+
+	// 构建历史持仓查询请求
+	historyReq := &models.PositionsHistoryRequest{
+		PosId: posId,
+		Limit: c.DefaultQuery("limit", "100"),
+	}
+
+	// 如果找到了当前持仓，使用其uTime作为before参数来查询历史
+	var currentUTime string
+	if len(currentPositions.Positions) > 0 {
+		currentUTime = currentPositions.Positions[0].UTime
+		// 可以选择性地设置before参数，查询该时间点之前的历史
+		if c.Query("includeCurrent") != "true" {
+			historyReq.Before = currentUTime
+		}
+	}
+
+	// 获取历史持仓信息
+	historyResponse, err := accountService.GetPositionsHistory(historyReq, currency)
+	if err != nil {
+		utils.ErrorResponse(c, http.StatusInternalServerError, "获取历史持仓信息失败: "+err.Error())
+		return
+	}
+
+	// 构建完整响应
+	response := gin.H{
+		"posId":           posId,
+		"currentPosition": nil,
+		"history":         historyResponse.Positions,
+		"hasMore":         historyResponse.HasMore,
+		"currency":        currency,
+	}
+
+	// 如果有当前持仓，添加到响应中
+	if len(currentPositions.Positions) > 0 {
+		response["currentPosition"] = currentPositions.Positions[0]
+		response["currentUTime"] = currentUTime
+	}
+
+	utils.SuccessResponse(c, response, "获取持仓完整历史成功")
 }
 
 // getCurrencyName 获取币种中文名称

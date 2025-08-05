@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/gin-gonic/gin"
 	"github.com/cardchoosen/AlphaArk_Gin/internal/config"
 	"github.com/cardchoosen/AlphaArk_Gin/internal/utils"
+	"github.com/gin-gonic/gin"
 )
 
 // SetupOKXRoutes 设置OKX API路由
@@ -29,6 +29,11 @@ func SetupOKXRoutes(r *gin.Engine, cfg *config.Config) {
 		// 获取API配置信息（仅显示非敏感信息）
 		okx.GET("/config", func(c *gin.Context) {
 			GetOKXConfig(c, cfg)
+		})
+
+		// 获取系统时间
+		okx.GET("/system-time", func(c *gin.Context) {
+			GetSystemTime(c, okxClient)
 		})
 	}
 }
@@ -93,4 +98,15 @@ func GetOKXConfig(c *gin.Context, cfg *config.Config) {
 	}
 
 	utils.SuccessResponse(c, safeConfig, "获取OKX配置信息成功")
+}
+
+// GetSystemTime 获取系统时间
+func GetSystemTime(c *gin.Context, client *OKXClient) {
+	result, err := client.GetSystemTime()
+	if err != nil {
+		utils.ErrorResponse(c, http.StatusInternalServerError, "获取系统时间失败: "+err.Error())
+		return
+	}
+
+	utils.SuccessResponse(c, result, "获取系统时间成功")
 }
