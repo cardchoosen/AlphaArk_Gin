@@ -2,6 +2,7 @@ package api
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/yourname/my-gin-project/internal/config"
@@ -75,15 +76,20 @@ func GetInstrumentsByType(c *gin.Context, client *OKXClient) {
 
 // GetOKXConfig 获取OKX配置信息（仅显示非敏感信息）
 func GetOKXConfig(c *gin.Context, cfg *config.Config) {
+	// 直接检查环境变量
+	apiKey := os.Getenv("OKX_API_KEY")
+	secretKey := os.Getenv("OKX_SECRET_KEY")
+	passphrase := os.Getenv("OKX_PASSPHRASE")
+
 	// 只返回非敏感信息
 	safeConfig := map[string]interface{}{
 		"remark":        cfg.OKX.Remark,
 		"permissions":   cfg.OKX.Permissions,
 		"baseUrl":       cfg.OKX.BaseURL,
 		"isTest":        cfg.OKX.IsTest,
-		"hasApiKey":     cfg.OKX.APIKey != "",
-		"hasSecretKey":  cfg.OKX.SecretKey != "",
-		"hasPassphrase": cfg.OKX.Passphrase != "",
+		"hasApiKey":     apiKey != "",
+		"hasSecretKey":  secretKey != "",
+		"hasPassphrase": passphrase != "",
 	}
 
 	utils.SuccessResponse(c, safeConfig, "获取OKX配置信息成功")

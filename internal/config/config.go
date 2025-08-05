@@ -3,6 +3,8 @@ package config
 import (
 	"os"
 	"strconv"
+
+	"github.com/joho/godotenv"
 )
 
 // Config 应用配置结构
@@ -28,6 +30,9 @@ type OKXConfig struct {
 
 // Load 加载配置
 func Load() *Config {
+	// 加载.env文件
+	godotenv.Load()
+
 	return &Config{
 		Environment: getEnv("ENVIRONMENT", "development"),
 		Port:        getEnv("PORT", "8080"),
