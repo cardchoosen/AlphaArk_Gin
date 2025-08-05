@@ -11,6 +11,19 @@ type Config struct {
 	Port        string
 	DatabaseURL string
 	JWTSecret   string
+	OKX         OKXConfig
+}
+
+// OKXConfig OKX API配置
+type OKXConfig struct {
+	APIKey      string
+	SecretKey   string
+	Passphrase  string
+	IP          string
+	Remark      string
+	Permissions string
+	BaseURL     string
+	IsTest      bool
 }
 
 // Load 加载配置
@@ -20,6 +33,16 @@ func Load() *Config {
 		Port:        getEnv("PORT", "8080"),
 		DatabaseURL: getEnv("DATABASE_URL", ""),
 		JWTSecret:   getEnv("JWT_SECRET", "your-secret-key"),
+		OKX: OKXConfig{
+			APIKey:      getEnv("OKX_API_KEY", ""),
+			SecretKey:   getEnv("OKX_SECRET_KEY", ""),
+			Passphrase:  getEnv("OKX_PASSPHRASE", ""),
+			IP:          getEnv("OKX_IP", ""),
+			Remark:      getEnv("OKX_REMARK", "Gin项目"),
+			Permissions: getEnv("OKX_PERMISSIONS", "读取/提现/交易"),
+			BaseURL:     getEnv("OKX_BASE_URL", "https://www.okx.com"),
+			IsTest:      getEnvBool("OKX_IS_TEST", false),
+		},
 	}
 }
 
@@ -39,4 +62,14 @@ func getEnvInt(key string, defaultValue int) int {
 		}
 	}
 	return defaultValue
-} 
+}
+
+// getEnvBool 获取布尔环境变量
+func getEnvBool(key string, defaultValue bool) bool {
+	if value := os.Getenv(key); value != "" {
+		if boolValue, err := strconv.ParseBool(value); err == nil {
+			return boolValue
+		}
+	}
+	return defaultValue
+}

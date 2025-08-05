@@ -32,7 +32,7 @@ func main() {
 	r.LoadHTMLGlob("web/templates/*")
 
 	// 设置API路由
-	api.SetupRoutes(r)
+	api.SetupRoutes(r, cfg)
 
 	// 根路由
 	r.GET("/", func(c *gin.Context) {

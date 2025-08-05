@@ -35,9 +35,26 @@ AlphaArk_Gin/
 ## 快速开始
 
 1. 克隆项目
-2. 复制 `.env.example` 为 `.env` 并配置环境变量
-3. 运行 `go mod tidy` 安装依赖
-4. 运行 `go run cmd/server/main.go` 启动服务器
+2. 复制 `env.example` 为 `.env` 并配置环境变量
+3. 配置OKX API信息（见下方说明）
+4. 运行 `go mod tidy` 安装依赖
+5. 运行 `go run cmd/server/main.go` 启动服务器
+
+### OKX API配置
+
+在 `.env` 文件中配置以下OKX API信息：
+
+```bash
+# OKX API配置
+OKX_API_KEY=6e5bb45e-bffe-42d7-932f-9c828dc3a533
+OKX_SECRET_KEY=CB3D7E7D80F9FD3E3CB838017AC0CA1F
+OKX_PASSPHRASE=DWQIUD.e39081
+OKX_IP=
+OKX_REMARK=Gin项目
+OKX_PERMISSIONS=读取/提现/交易
+OKX_BASE_URL=https://www.okx.com
+OKX_IS_TEST=false
+```
 
 ## 开发指南
 

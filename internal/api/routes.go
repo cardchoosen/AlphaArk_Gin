@@ -2,10 +2,11 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/yourname/my-gin-project/internal/config"
 )
 
 // SetupRoutes 设置API路由
-func SetupRoutes(r *gin.Engine) {
+func SetupRoutes(r *gin.Engine, cfg *config.Config) {
 	// API v1 路由组
 	v1 := r.Group("/api/v1")
 	{
@@ -26,6 +27,9 @@ func SetupRoutes(r *gin.Engine) {
 			})
 		})
 	}
+
+	// 设置OKX API路由
+	SetupOKXRoutes(r, cfg)
 }
 
 // GetUsers 获取用户列表
@@ -68,4 +72,4 @@ func DeleteUser(c *gin.Context) {
 		"message": "User deleted",
 		"id":      id,
 	})
-} 
+}
