@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - ENVIRONMENT=development
+      - PORT=8080
+      - DATABASE_URL=postgres://postgres:password@db:5432/alphaark?sslmode=disable
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+    networks:
+      - alphaark-network
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=alphaark
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - alphaark-network
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - alphaark-network
+
+volumes:
+  postgres_data:
+
+networks:
+  alphaark-network:
+    driver: bridge 
