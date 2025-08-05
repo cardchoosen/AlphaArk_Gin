@@ -3,7 +3,7 @@ package tests
 import (
 	"testing"
 
-	"github.com/yourname/my-gin-project/internal/models"
+	"github.com/cardchoosen/AlphaArk_Gin/internal/models"
 )
 
 func TestUserModel(t *testing.T) {

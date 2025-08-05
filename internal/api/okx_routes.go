@@ -5,8 +5,8 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/yourname/my-gin-project/internal/config"
-	"github.com/yourname/my-gin-project/internal/utils"
+	"github.com/cardchoosen/AlphaArk_Gin/internal/config"
+	"github.com/cardchoosen/AlphaArk_Gin/internal/utils"
 )
 
 // SetupOKXRoutes 设置OKX API路由

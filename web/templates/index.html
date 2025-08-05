@@ -3,67 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{.title}}</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .container {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            text-align: center;
-            max-width: 500px;
-            width: 90%;
-        }
-        h1 {
-            color: #333;
-            margin-bottom: 1rem;
-        }
-        p {
-            color: #666;
-            line-height: 1.6;
-        }
-        .api-links {
-            margin-top: 2rem;
-        }
-        .api-links a {
-            display: inline-block;
-            margin: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: #667eea;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background 0.3s;
-        }
-        .api-links a:hover {
-            background: #5a6fd8;
-        }
-    </style>
+    <title>AlphaArk 量化交易系统</title>
+    <link rel="stylesheet" href="/static/css/main.css">
 </head>
 <body>
-    <div class="container">
-        <h1>{{.title}}</h1>
-        <p>欢迎使用 AlphaArk Gin 项目！这是一个基于 Gin 框架的 Go Web 应用程序。</p>
-        
-        <div class="api-links">
-            <a href="/health">健康检查</a>
-            <a href="/api/v1/ping">API Ping</a>
-            <a href="/api/v1/users">用户列表</a>
+    <!-- 头部导航 -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo">AlphaArk</div>
+            <nav class="nav-links">
+                <a href="/">交易面板</a>
+                <a href="/portfolio">投资组合</a>
+                <a href="/orders">订单管理</a>
+                <a href="/settings">设置</a>
+            </nav>
         </div>
-        
-        <p style="margin-top: 2rem; font-size: 0.9rem; color: #999;">
-            开始开发你的应用吧！
-        </p>
-    </div>
+    </header>
+
+    <!-- 主内容区域 -->
+    <main class="main-container">
+        <div class="dashboard">
+            <!-- BTC-USDT 价格显示 -->
+            <div class="card price-card">
+                <div class="price-symbol">
+                    <span class="status-indicator" id="connection-status"></span>
+                    BTC/USDT
+                </div>
+                <div class="price-value" id="btc-price">
+                    <span class="loading"></span>
+                </div>
+                <div class="price-change" id="price-change">--</div>
+                <div class="price-time" id="price-time">连接中...</div>
+            </div>
+
+            <!-- 账户信息占位 -->
+            <div class="placeholder-card">
+                <div class="placeholder-title">账户余额</div>
+                <div class="placeholder-desc">即将推出</div>
+            </div>
+
+            <!-- 持仓信息占位 -->
+            <div class="placeholder-card">
+                <div class="placeholder-title">当前持仓</div>
+                <div class="placeholder-desc">即将推出</div>
+            </div>
+
+            <!-- 订单状态占位 -->
+            <div class="placeholder-card">
+                <div class="placeholder-title">活跃订单</div>
+                <div class="placeholder-desc">即将推出</div>
+            </div>
+
+            <!-- 市场概览占位 -->
+            <div class="placeholder-card">
+                <div class="placeholder-title">市场概览</div>
+                <div class="placeholder-desc">即将推出</div>
+            </div>
+
+            <!-- 交易历史占位 -->
+            <div class="placeholder-card">
+                <div class="placeholder-title">交易历史</div>
+                <div class="placeholder-desc">即将推出</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 服务层 -->
+    <script src="/static/js/services/ApiService.js"></script>
+    <script src="/static/js/services/WebSocketService.js"></script>
+    
+    <!-- 组件层 -->
+    <script src="/static/js/components/PriceCard.js"></script>
+    
+    <!-- 应用主文件 -->
+    <script src="/static/js/main.js"></script>
 </body>
 </html> 

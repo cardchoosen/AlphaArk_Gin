@@ -4,8 +4,8 @@ import (
 	"errors"
 	"time"
 
-	"github.com/yourname/my-gin-project/internal/models"
-	"github.com/yourname/my-gin-project/internal/repository"
+	"github.com/cardchoosen/AlphaArk_Gin/internal/models"
+	"github.com/cardchoosen/AlphaArk_Gin/internal/repository"
 )
 
 // UserService 用户服务接口

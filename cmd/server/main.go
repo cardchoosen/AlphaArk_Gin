@@ -5,9 +5,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/yourname/my-gin-project/internal/api"
-	"github.com/yourname/my-gin-project/internal/config"
-	"github.com/yourname/my-gin-project/internal/middleware"
+	"github.com/cardchoosen/AlphaArk_Gin/internal/api"
+	"github.com/cardchoosen/AlphaArk_Gin/internal/config"
+	"github.com/cardchoosen/AlphaArk_Gin/internal/middleware"
 )
 
 func main() {

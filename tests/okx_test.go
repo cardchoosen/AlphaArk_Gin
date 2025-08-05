@@ -3,8 +3,8 @@ package tests
 import (
 	"testing"
 
-	"github.com/yourname/my-gin-project/internal/api"
-	"github.com/yourname/my-gin-project/internal/config"
+	"github.com/cardchoosen/AlphaArk_Gin/internal/api"
+	"github.com/cardchoosen/AlphaArk_Gin/internal/config"
 )
 
 func TestOKXConfig(t *testing.T) {

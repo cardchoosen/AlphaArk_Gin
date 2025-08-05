@@ -2,7 +2,7 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/yourname/my-gin-project/internal/config"
+	"github.com/cardchoosen/AlphaArk_Gin/internal/config"
 )
 
 // SetupRoutes 设置API路由
@@ -30,6 +30,12 @@ func SetupRoutes(r *gin.Engine, cfg *config.Config) {
 
 	// 设置OKX API路由
 	SetupOKXRoutes(r, cfg)
+	
+	// 设置价格API路由
+	SetupPriceRoutes(r, cfg)
+	
+	// 设置WebSocket路由
+	SetupWebSocketRoutes(r, cfg)
 }
 
 // GetUsers 获取用户列表

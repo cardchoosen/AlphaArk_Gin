@@ -3,7 +3,7 @@ package repository
 import (
 	"errors"
 
-	"github.com/yourname/my-gin-project/internal/models"
+	"github.com/cardchoosen/AlphaArk_Gin/internal/models"
 )
 
 // UserRepository 用户仓库接口

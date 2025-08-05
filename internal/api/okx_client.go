@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/yourname/my-gin-project/internal/config"
+	"github.com/cardchoosen/AlphaArk_Gin/internal/config"
 )
 
 // OKXClient OKX API客户端
@@ -61,6 +61,33 @@ type InstrumentsResponse struct {
 	Data []Instrument `json:"data"`
 }
 
+// Ticker 行情数据
+type Ticker struct {
+	InstType string `json:"instType"`
+	InstId   string `json:"instId"`
+	Last     string `json:"last"`
+	LastSz   string `json:"lastSz"`
+	AskPx    string `json:"askPx"`
+	AskSz    string `json:"askSz"`
+	BidPx    string `json:"bidPx"`
+	BidSz    string `json:"bidSz"`
+	Open24h  string `json:"open24h"`
+	High24h  string `json:"high24h"`
+	Low24h   string `json:"low24h"`
+	Vol24h   string `json:"vol24h"`
+	VolCcy24h string `json:"volCcy24h"`
+	SodUtc0  string `json:"sodUtc0"`
+	SodUtc8  string `json:"sodUtc8"`
+	Ts       string `json:"ts"`
+}
+
+// TickerResponse 获取行情响应
+type TickerResponse struct {
+	Code string   `json:"code"`
+	Msg  string   `json:"msg"`
+	Data []Ticker `json:"data"`
+}
+
 // GetInstruments 获取交易对信息
 func (c *OKXClient) GetInstruments(instType string) (*InstrumentsResponse, error) {
 	url := fmt.Sprintf("%s/api/v5/public/instruments?instType=%s", c.config.BaseURL, instType)
@@ -85,6 +112,37 @@ func (c *OKXClient) GetInstruments(instType string) (*InstrumentsResponse, error
 	}
 
 	var result InstrumentsResponse
+	if err := json.Unmarshal(body, &result); err != nil {
+		return nil, fmt.Errorf("解析响应失败: %w", err)
+	}
+
+	return &result, nil
+}
+
+// GetTicker 获取行情数据
+func (c *OKXClient) GetTicker(instId string) (*TickerResponse, error) {
+	url := fmt.Sprintf("%s/api/v5/market/ticker?instId=%s", c.config.BaseURL, instId)
+	
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("创建请求失败: %w", err)
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Accept", "application/json")
+
+	resp, err := c.client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("请求失败: %w", err)
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("读取响应失败: %w", err)
+	}
+
+	var result TickerResponse
 	if err := json.Unmarshal(body, &result); err != nil {
 		return nil, fmt.Errorf("解析响应失败: %w", err)
 	}
